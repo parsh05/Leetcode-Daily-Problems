@@ -9,9 +9,7 @@ class Pair implements Comparable<Pair>{
 
     @Override
     public int compareTo(Pair o) {
-        if (this.difficulty == o.difficulty)
-            return o.profit - this.profit;
-        return this.difficulty - o.difficulty;
+        if (this.difficulty == o.difficulty) return this.difficulty - o.difficulty;
     }
 }
 
