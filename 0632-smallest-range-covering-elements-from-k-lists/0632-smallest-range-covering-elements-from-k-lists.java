@@ -1,39 +1,47 @@
 class Solution {
-    public int[] smallestRange(List<List<Integer>> nums) {
-        // Min-Heap: stores (value, list index, element index)
-        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]);
-        int curMax = Integer.MIN_VALUE;
+    public int[] smallestRange(List<List<Integer>> arr) {
+        PriorityQueue<Triplets> pq = new PriorityQueue<>();
+        int k = arr.size();
+         int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for(int i = 0; i < k; i++){
+            pq.add(new Triplets(arr.get(i).get(0), i, 0));
 
-        // Initialize the heap with the first element of each list
-        for (int i = 0; i < nums.size(); i++) {
-            minHeap.offer(new int[]{nums.get(i).get(0), i, 0});
-            curMax = Math.max(curMax, nums.get(i).get(0));
+            max = Math.max(arr.get(i).get(0), max);
         }
-
-        // Track the smallest range
-        int[] smallRange = new int[]{0, Integer.MAX_VALUE};
-
-        while (true) {
-            // Get the minimum element from the heap
-            int[] curr = minHeap.poll();
-            int curMin = curr[0], listIdx = curr[1], elemIdx = curr[2];
-
-            // Update the smallest range if a better one is found
-            if (curMax - curMin < smallRange[1] - smallRange[0]) {
-                smallRange[0] = curMin;
-                smallRange[1] = curMax;
+       
+        int min_range = Integer.MAX_VALUE;
+        int[] ans = new int[2];
+        while(pq.size() == k){
+            Triplets t = pq.poll();
+            int ele_idx = t.ele_idx, list_idx = t.list_idx;
+            min = t.ele;
+            int range = max - min;
+            if(range < min_range){
+                min_range = range;
+                ans[0] = min;
+                ans[1] = max;
             }
 
-            // Move to the next element in the same list
-            if (elemIdx + 1 < nums.get(listIdx).size()) {
-                int nextVal = nums.get(listIdx).get(elemIdx + 1);
-                minHeap.offer(new int[]{nextVal, listIdx, elemIdx + 1});
-                curMax = Math.max(curMax, nextVal);
-            } else {
-                // If any list is exhausted, stop
-                break;
+            //
+            if(ele_idx + 1 < arr.get(list_idx).size()){
+                pq.add(new Triplets(arr.get(list_idx).get(1 + ele_idx), list_idx,1 + ele_idx));
+                max = Math.max(arr.get(list_idx).get(1 + ele_idx), max);;
             }
         }
-        return smallRange;
+        return ans;
+    }
+}
+class Triplets implements Comparable<Triplets>{
+    int ele;
+    int list_idx;
+    int ele_idx;
+    Triplets(int ele, int list_idx, int ele_idx){
+        this.ele = ele;
+        this.list_idx = list_idx;
+        this.ele_idx = ele_idx;
+    }
+    @Override
+    public int compareTo(Triplets t){
+        return this.ele - t.ele;
     }
 }
