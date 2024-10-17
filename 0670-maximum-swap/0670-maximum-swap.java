@@ -1,39 +1,31 @@
-import java.util.PriorityQueue;
-
 class Solution {
     public int maximumSwap(int num) {
         // Convert the number into an array of digits
-        String numStr = Integer.toString(num);
-        int[] arr = new int[numStr.length()];
-        for (int i = 0; i < numStr.length(); i++) {
-            arr[i] = numStr.charAt(i) - '0'; // Convert each character to integer
+        char[] arr = Integer.toString(num).toCharArray();
+        int n = arr.length;
+
+        // Track the last occurrence of each digit (0-9)
+        int[] last = new int[10];
+        for (int i = 0; i < n; i++) {
+            last[arr[i] - '0'] = i;  // Store the index of the last occurrence
         }
 
-        int n = arr.length;
-        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {
-            if(arr[a] == arr[b] ) return a - b;
-            return arr[b] - arr[a];
-        });
-        for (int i = 0; i < n; i++) pq.add(i);
-
+        // Traverse the number's digits
         for (int i = 0; i < n; i++) {
-            if (arr[i] != arr[pq.peek()]) {
-                // Swap and break
-                int temp_idx = pq.poll();
-                int temp = arr[temp_idx];
-                arr[temp_idx] = arr[i];
-                arr[i] = temp;
-                break;
-            } else {
-                pq.poll();
+            // For each digit, check if a larger digit occurs later
+            for (int d = 9; d > arr[i] - '0'; d--) {
+                if (last[d] > i) {
+                    // Swap the current digit with the larger one found later
+                    char temp = arr[i];
+                    arr[i] = arr[last[d]];
+                    arr[last[d]] = temp;
+                    // After one swap, return the new number
+                    return Integer.parseInt(new String(arr));
+                }
             }
         }
 
-        // Create number from the modified integer array
-        int number = 0;
-        for (int dig : arr) {
-            number = number * 10 + dig;
-        }
-        return number;
+        // If no swap was made, return the original number
+        return num;
     }
 }
