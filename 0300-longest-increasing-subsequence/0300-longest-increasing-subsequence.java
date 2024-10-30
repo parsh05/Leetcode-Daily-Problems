@@ -1,35 +1,21 @@
-import java.util.Arrays;
-
 class Solution {
-    private int solve(int[] arr, int idx, int prevIdx, int[][] dp) {
-        if (idx == arr.length) {
-            return 0;
-        }
-        
-        if (dp[idx][prevIdx + 1] != -1) {
-            return dp[idx][prevIdx + 1];
-        }
-
-        // Option to exclude current element
-        int exclude = solve(arr, idx + 1, prevIdx, dp);
-
-        // Option to include current element if it forms an increasing sequence
-        int include = 0;
-        if (prevIdx == -1 || arr[idx] > arr[prevIdx]) {
-            include = 1 + solve(arr, idx + 1, idx, dp);
+    int lis(int[] arr, int i, int prevI, int[][] dp){
+        if(i == arr.length) return 0;
+        if(dp[i][prevI+1] != -1) return dp[i][prevI + 1];
+        int include = 0, exclude = 0;
+        if(prevI == -1 || arr[i] > arr[prevI] ){
+            include = 1 +  lis(arr, i+1, i, dp);
+            exclude = lis(arr, i + 1, prevI, dp);
+        } else{
+            exclude = lis(arr, i + 1, prevI, dp);
         }
 
-        // Memoize and return the maximum of including or excluding the element
-        dp[idx][prevIdx + 1] = Math.max(include, exclude);
-        return dp[idx][prevIdx + 1];
+        return dp[i][prevI+1] = Math.max(include, exclude);
     }
-
     public int lengthOfLIS(int[] nums) {
         int n = nums.length;
-        int[][] dp = new int[n][n + 1];
-        for (int[] row : dp) {
-            Arrays.fill(row, -1);
-        }
-        return solve(nums, 0, -1, dp);
+        int[][] dp = new int[n+1][n+1];
+        for(int[] row : dp) Arrays.fill(row, -1);
+        return lis(nums, 0, -1, dp);
     }
 }
