@@ -8,20 +8,20 @@ class Solution {
 
         int target = sum / 2;
         Boolean[][] dp = new Boolean[nums.length][target + 1]; // Memoization table
-        return solve(nums, 0, 0, target, dp);
+        return solve(nums, nums.length - 1, 0, target, dp);
     }
 
     boolean solve(int[] nums, int i, int currentSum, int target, Boolean[][] dp) {
         // Base cases
         if (currentSum == target) return true;
-        if (i >= nums.length || currentSum > target) return false;
+        if (i <  0 || currentSum > target) return false;
 
         // If already computed, return the stored result
         if (dp[i][currentSum] != null) return dp[i][currentSum];
 
         // Include the current element or skip it
-        dp[i][currentSum] = solve(nums, i + 1, currentSum + nums[i], target, dp) ||
-                            solve(nums, i + 1, currentSum, target, dp);
+        dp[i][currentSum] = solve(nums, i - 1, currentSum + nums[i], target, dp) ||
+                            solve(nums, i - 1, currentSum, target, dp);
         return dp[i][currentSum];
     }
 }
