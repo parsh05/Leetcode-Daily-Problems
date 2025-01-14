@@ -26,7 +26,7 @@ class Solution {
                 hs2.remove(A[i]);
                 hs1.remove(A[i]);
             }
-            C[i] = (i+1) - Math.min(hs1.size(), hs2.size());
+            C[i] = (i+1) - hs1.size();
         }
         return C;
     }
