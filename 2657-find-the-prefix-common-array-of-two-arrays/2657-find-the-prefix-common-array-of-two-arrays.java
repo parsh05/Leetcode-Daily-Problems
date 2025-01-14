@@ -7,29 +7,26 @@ class Solution {
          HashSet<Integer> hs2 = new HashSet<>();
         for(int i = 0; i < n; i++){
  
-            if(A[i] == B[i]){
-                if(i == 0) C[i] = 1;
-                else C[i] = C[i-1] + 1;
-                continue;
-            }
+            // if(A[i] == B[i]){
+            //     if(i == 0) C[i] = 1;
+            //     else C[i] = C[i-1] + 1;
+            //     continue;
+            // }
 
-            boolean presentInB = false, presentInA = false;
+            // boolean presentInB = false, presentInA = false;
+
+            hs1.add(A[i]);
             if(hs1.contains(B[i])){
                 hs1.remove(B[i]);
-                 presentInA = true;
+                hs2.remove(B[i]);
             }
+            
+            hs2.add(B[i]);
             if(hs2.contains(A[i])){
                 hs2.remove(A[i]);
-                 presentInB = true;
-            }
-            if( !presentInA ){
-                hs2.add(B[i]);
-            }
-            if( !presentInB ){
-                hs1.add(A[i]);
+                hs1.remove(A[i]);
             }
             C[i] = (i+1) - Math.min(hs1.size(), hs2.size());
-            
         }
         return C;
     }
